@@ -4,14 +4,20 @@ const connectDB = require('./db/connect')
 
 const app = express()
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('TRYGVE')
-})
+// Import routes
+const postsRoute = require('./routes/index')
 
-app.get('/posts', (req, res) => {
-  res.send('POSTS')
-})
+
+app.set('view engine', 'ejs')
+app.use(express.static('public'))
+app.use(express.urlencoded({
+  extended: false
+}))
+app.use(express.json())
+
+app.use('/', postsRoute)
+
+
 
 // Server
 const PORT = process.env.PORT || 3000
