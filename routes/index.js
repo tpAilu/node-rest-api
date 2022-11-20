@@ -2,13 +2,16 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
 
+const year = require('../middleware/year')
+let yearNow = year()
+
 // Routes
 router.get('/', (req, res) => {
     res.render('index', {
-        title: 'INDEX'
+        title: 'INDEX',
+        year: yearNow
     })
 })
-
 
 router.post('/', async (req, res) => {
     try {
@@ -17,10 +20,24 @@ router.post('/', async (req, res) => {
             email: req.body.email,
             password: req.body.password
         })
-        console.log(user)
         user.save()
+        res.redirect('/')
     } catch (error) {
         console.log(error)
+    }
+})
+
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.find()
+        res.render('users', {
+            title: 'USERS',
+            year: yearNow,
+            users: users
+        })
+    } catch (error) {
+        console.log(error)
+        res.redirect('/')
     }
 })
 
